@@ -15,5 +15,31 @@ from scrypt import *
 ```
 
 # Использование:
+## Для исправления оценок 2 и 3 на 5
+Необходимо прописать в консоли `fix_marks(name)`, где `name` - ФИО ученика полностью, в кавычках и с большой буквы.
+### Пример
+```
+python manage.py shell
+from scrypt import *
+fix_marks('Фролов Иван Григорьевич')
+```
+## Для удаления всех замечаний
+Необходимо прописать в консоли `remove_chastisements(name)`, где `name` - ФИО ученика полностью, в кавычках и с большой буквы.
+### Пример
+```
+python manage.py shell
+from scrypt import *
+remove_chastisements('Фролов Иван Григорьевич')
+```
 
+## Для рандомного добавления похвалы от учителей:
+Необходимо прописать в консоли `create_commendation(name, subject, praise_text)`, где:
+* `name` - ФИО ученика полностью, в кавычках и с большой буквы.
+* `subject` - название урока, с большой буквы
 
+### Пример
+```
+python manage.py shell
+from scrypt import *
+create_commendation('Фролов Иван Григорьевич', 'Физкультура`, praise_text)
+```
