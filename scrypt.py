@@ -1,5 +1,6 @@
 from random import choice
-from datacenter.models import *
+from datacenter.models import Schoolkid, Lesson
+from datacenter.models import Mark, Chastisement, Commendation
 from django.core.exceptions import ObjectDoesNotExist
 
 praise_text = (
@@ -29,17 +30,12 @@ def get_schoolkid_from_name(name):
 
 
 def fix_marks(name):
-    schoolkid = get_schoolkid_from_name(name)
-    student = Schoolkid.objects.get(full_name=schoolkid.full_name)
-    student_grades = Mark.objects.filter(schoolkid=student, points__in=[2, 3])
-    for grades in student_grades:
-        grades.points = 5
-        grades.save()
+    student = get_schoolkid_from_name(name)
+    Mark.objects.filter(schoolkid=student, points__in=[2, 3]).update(points=5)
 
 
 def remove_chastisements(name):
-    schoolkid = get_schoolkid_from_name(name)
-    student = Schoolkid.objects.get(full_name=schoolkid.full_name)
+    student = get_schoolkid_from_name(name)
     comments = Chastisement.objects.filter(schoolkid=student)
     comments.delete()
 
@@ -50,12 +46,7 @@ def create_commendation(name, subject, praise_text):
         subject__title=subject, year_of_study='6',
         group_letter='А'
     ).order_by('?').first()
-    if lesson is None:
-        raise IndexError(
-            f'Предмет {subject} В базе не найден. '
-            f'Проверьте правильность написания'
-        )
-    else:
+    if lesson:
         if not Commendation.objects.filter(
             created=lesson.date, schoolkid=schoolkid
         ):
@@ -66,3 +57,9 @@ def create_commendation(name, subject, praise_text):
                 teacher=lesson.teacher,
                 subject=lesson.subject
             )
+
+    else:
+        raise IndexError(
+            f'Предмет {subject} В базе не найден. '
+            f'Проверьте правильность написания'
+        )
