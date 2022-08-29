@@ -1,7 +1,7 @@
 from random import choice
 from datacenter.models import Schoolkid, Lesson
 from datacenter.models import Mark, Chastisement, Commendation
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 praise_text = (
     'Молодец!', 'Отлично!', 'Хорошо!', 'Гораздо лучше, чем я ожидал!',
@@ -26,6 +26,10 @@ def get_schoolkid_from_name(name):
     except ObjectDoesNotExist:
         raise ObjectDoesNotExist(
             f'ФИО {name} нет в базе.Необходимо ввести полностью ФИО'
+        )
+    except MultipleObjectsReturned:
+        raise MultipleObjectsReturned(
+            'Найдено несколько полозователей'
         )
 
 
